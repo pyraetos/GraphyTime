@@ -103,7 +103,7 @@ public class GraphyTimeFrame extends JFrame{
 		graphButton = new JButton("Graph");
 		graphButton.addActionListener((e) -> {
 			String inputFunction = functionField.getText();
-			Point[] function = FunctionParser.parse(inputFunction, min, length);
+			Point[] function = FunctionParser.parse(inputFunction);
 			if(function != null)
 				this.function = function;
 		});
