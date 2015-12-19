@@ -12,7 +12,7 @@ public abstract class Function{
 		return inner.evaluate(x);
 	}
 	
-	class Constant extends Function{
+	static class Constant extends Function{
 		
 		private double value;
 		
@@ -27,7 +27,7 @@ public abstract class Function{
 		
 	}
 	
-	class IndependentVariable extends Function{
+	static class IndependentVariable extends Function{
 
 		@Override
 		public double evaluate(double x){
@@ -36,7 +36,7 @@ public abstract class Function{
 
 	}
 
-	class Multiplication extends Function{
+	static class Multiplication extends Function{
 
 		private Function right;
 
@@ -52,7 +52,7 @@ public abstract class Function{
 
 	}
 	
-	class Division extends Function{
+	static class Division extends Function{
 
 		private Function right;
 
@@ -68,7 +68,7 @@ public abstract class Function{
 
 	}
 	
-	class Addition extends Function{
+	static class Addition extends Function{
 		
 		private Function right;
 		
@@ -84,7 +84,7 @@ public abstract class Function{
 		
 	}
 	
-	class Subtraction extends Function{
+	static class Subtraction extends Function{
 		
 		private Function right;
 		
