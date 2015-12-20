@@ -45,19 +45,6 @@ public abstract class Function{
 		}
 
 	}
-	
-	static class Negation extends Function{
-		
-		public Negation(Function inner){
-			this.inner = inner;
-		}
-		
-		@Override
-		public double evaluate(double x){
-			return -inner.evaluate(x);
-		}
-		
-	}
 
 	static class Multiplication extends Function{
 

@@ -4,8 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,10 +20,13 @@ public class GraphyTimeFrame extends JFrame{
 	private static JPanel graphPanel;
 	private static JTextField functionField;
 	private static JLabel functionLabel;
+	private static JTextField stepField;
+	private static JLabel stepLabel;
 	private static JButton graphButton;
 	
 	private Point[] function;
 	private Point center;
+	private double step;
 	
 	public GraphyTimeFrame(){
 		initWindow();
@@ -31,6 +34,8 @@ public class GraphyTimeFrame extends JFrame{
 		initInputPanel();
 		initFunctionLabel();
 		initFunctionField();
+		initStepLabel();
+		initStepField();
 		initGraphButton();
 		setVisible(true);
 	}
@@ -38,8 +43,9 @@ public class GraphyTimeFrame extends JFrame{
 	private void initWindow(){
 		function = null;
 		center = new Point(0,0);
+		step = 0.25;
 		this.setLayout(null);
-		this.setBounds(200, 100, 500, 525);
+		this.setBounds(200, 100, 500, 600);
 		this.setResizable(false);
 		this.setTitle("GraphyTime");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -82,13 +88,13 @@ public class GraphyTimeFrame extends JFrame{
 	
 	private void initInputPanel(){
 		inputPanel = new JPanel();
-		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.X_AXIS));
-		inputPanel.setBounds(100,450,300,25);
+		inputPanel.setLayout(new GridLayout(0,2,0,10));
+		inputPanel.setBounds(120,450,200,120);
 		this.add(inputPanel);
 	}
 	
 	private void initFunctionLabel(){
-		functionLabel = new JLabel("f(x) = ");
+		functionLabel = new JLabel("                   f(x) = ");
 		inputPanel.add(functionLabel);
 	}
 	
@@ -97,15 +103,28 @@ public class GraphyTimeFrame extends JFrame{
 		functionField.setEditable(true);
 		functionField.setBackground(Color.WHITE);
 		inputPanel.add(functionField);
-		inputPanel.add(Sys.space());
+	}
+	
+	private void initStepLabel(){
+		stepLabel = new JLabel("                   Step: ");
+		inputPanel.add(stepLabel);
+	}
+	
+	private void initStepField(){
+		stepField = new JTextField("0.25");
+		stepField.setEditable(true);
+		stepField.setBackground(Color.WHITE);
+		inputPanel.add(stepField);
 	}
 	
 	private void initGraphButton(){
+		inputPanel.add(Sys.space());
 		graphButton = new JButton("Graph");
 		graphButton.addActionListener((e) -> {
 			String inputFunction = functionField.getText();
 			Function function = FunctionParser.parse(inputFunction);
-			this.function = function.evaluate(-10, 10, 0.5);
+			loadStep();
+			this.function = function.evaluate(-10, 10, step);
 			repaint();
 		});
 		inputPanel.add(graphButton);
@@ -114,6 +133,10 @@ public class GraphyTimeFrame extends JFrame{
 	
 	public Point planeToFrame(Point planePoint){
 		return new Point(planePoint.getX() * 20 + 200, 200 - planePoint.getY() * 20);
+	}
+	
+	public void loadStep(){
+		this.step = Double.parseDouble(stepField.getText());
 	}
 	
 	public static void main(String[] args){

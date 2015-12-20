@@ -67,6 +67,7 @@ public abstract class FunctionParser{
 				case '-': {
 					if(currentOp < ADD){
 						left += opFromCode(currentOp) + right;
+						if(left.equals("")) left = "0";
 						right = "";
 						currentOp = SUB;
 					}
@@ -105,9 +106,9 @@ public abstract class FunctionParser{
 		if(input.isEmpty()) return false;
 		char c = input.charAt(0);
 		switch(c){
-		case '*': return true;
-		case '/': return true;
-		case '+': return true;
+		case '*':
+		case '/':
+		case '+':
 		case '-': return true;
 		default: return false;
 		}
@@ -127,7 +128,7 @@ public abstract class FunctionParser{
 	private static boolean isNumberNext(String input){
 		if(input.isEmpty()) return false;
 		char c = input.charAt(0);
-		return c == '-' || c == '.' || isDigit(c);
+		return  c == '.' || isDigit(c);
 	}
 	
 	private static String parseNumber(String input){
@@ -144,7 +145,7 @@ public abstract class FunctionParser{
 			input = input.substring(1);
 			if(input.isEmpty()) break;
 			c = input.charAt(0);
-		}while(isDigit(c) || c == '-' || c == '.');
+		}while(isDigit(c) || c == '.');
 		numberBuffer = Double.parseDouble(number);
 		return input;
 	}
