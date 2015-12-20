@@ -35,29 +35,41 @@ public abstract class FunctionParser{
 				input = parseItem(input);
 				switch(itemBuffer){
 				case '*': {
-					if(currentOp < MUL)
+					if(currentOp < MUL){
+						left += opFromCode(currentOp) + right;
+						right = "";
 						currentOp = MUL;
+					}
 					else
 						right += '*';
 					break;
 				}
 				case '/': {
-					if(currentOp < MUL)
+					if(currentOp < MUL){
+						left += opFromCode(currentOp) + right;
+						right = "";
 						currentOp = DIV;
+					}
 					else
 						right += '/';
 					break;
 				}
 				case '+': {
-					if(currentOp < ADD)
+					if(currentOp < ADD){
+						left += opFromCode(currentOp) + right;
+						right = "";
 						currentOp = ADD;
+					}
 					else
 						right += '+';
 					break;
 				}
 				case '-': {
-					if(currentOp < ADD)
+					if(currentOp < ADD){
+						left += opFromCode(currentOp) + right;
+						right = "";
 						currentOp = SUB;
+					}
 					else
 						right += '-';
 					break;
@@ -77,6 +89,16 @@ public abstract class FunctionParser{
 		else if(currentOp == SUB)
 			function = new Function.Subtraction(parse(left), parse(right));
 		return function;
+	}
+	
+	private static String opFromCode(byte code){
+		switch(code){
+		case 1: return "*";
+		case 2: return "/";
+		case 3: return "+";
+		case 4: return "-";
+		}
+		return "";
 	}
 	
 	private static boolean isOpNext(String input){
@@ -109,26 +131,27 @@ public abstract class FunctionParser{
 	}
 	
 	private static String parseNumber(String input){
-		String number = "" + input.charAt(0);
-		input = input.substring(1);
+		String number = "";
 		char c = input.charAt(0);
 		boolean periodUsed = false;
-		while(isDigit(c) || c == '.'){
+		do{
+			number += c;
 			if(c == '.'){
 				if(periodUsed)
 					return null;
 				periodUsed = true;
 			}
-			number += c;
 			input = input.substring(1);
-		}
+			if(input.isEmpty()) break;
+			c = input.charAt(0);
+		}while(isDigit(c) || c == '-' || c == '.');
 		numberBuffer = Double.parseDouble(number);
 		return input;
 	}
 	
 	private static boolean isDigit(char c){
-		return c == 0 || c == 1 || c == 2 || c == 3 || c == 4
-				|| c == 5 || c == 6 || c == 7 || c == 8 || c == 9;
+		return c == '0' || c == '1' || c == '2' || c == '3' || c == '4'
+				|| c == '5' || c == '6' || c == '7' || c == '8' || c == '9';
 	}
 	
 }

@@ -12,6 +12,16 @@ public abstract class Function{
 		return inner.evaluate(x);
 	}
 	
+	public Point[] evaluate(double xMin, double xMax, double xStep){
+		int n = (int) ((xMax - xMin) / xStep);
+		Point[] points = new Point[n+1];
+		for(int i = 0; i <= n; i++){
+			double x = xMin + i * xStep;
+			points[i] = new Point(x, evaluate(x));
+		}
+		return points;
+	}
+	
 	static class Constant extends Function{
 		
 		private double value;
@@ -34,6 +44,19 @@ public abstract class Function{
 			return x;
 		}
 
+	}
+	
+	static class Negation extends Function{
+		
+		public Negation(Function inner){
+			this.inner = inner;
+		}
+		
+		@Override
+		public double evaluate(double x){
+			return -inner.evaluate(x);
+		}
+		
 	}
 
 	static class Multiplication extends Function{

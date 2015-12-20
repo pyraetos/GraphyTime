@@ -1,24 +1,21 @@
 package net.pyraetos;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.pyraetos.util.Sys;
 
 public class GraphyTimeFrame extends JFrame{
 
-	private static JPanel panel;
 	private static JPanel inputPanel;
 	private static JPanel graphPanel;
 	private static JTextField functionField;
@@ -26,8 +23,7 @@ public class GraphyTimeFrame extends JFrame{
 	private static JButton graphButton;
 	
 	private Point[] function;
-	private Point min;
-	private int length;
+	private Point center;
 	
 	public GraphyTimeFrame(){
 		initWindow();
@@ -41,8 +37,7 @@ public class GraphyTimeFrame extends JFrame{
 	
 	private void initWindow(){
 		function = null;
-		min = new Point(-10, -10);
-		length = 20;
+		center = new Point(0,0);
 		this.setLayout(null);
 		this.setBounds(200, 100, 500, 525);
 		this.setResizable(false);
@@ -50,7 +45,8 @@ public class GraphyTimeFrame extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
-	public void drawAxes(Graphics g){
+	public void drawAxes(Graphics graphics){
+		Graphics2D g = (Graphics2D)graphics;
 		g.drawLine(200, 0, 200, 400);
 		g.drawLine(0, 200, 400, 200);
 		for(int x = 20; x < 400; x += 20){
@@ -60,8 +56,13 @@ public class GraphyTimeFrame extends JFrame{
 			g.drawLine(195, y, 205, y);
 		}
 		if(function != null){
-			
-			function = null;
+			g.setColor(Color.blue);
+			g.setStroke(new BasicStroke(3));
+			for(int i = 0; i < function.length - 1; i++){
+				Point first = planeToFrame(function[i]);
+				Point second = planeToFrame(function[i + 1]);
+				g.drawLine((int)first.getX(), (int)first.getY(), (int)second.getX(), (int)second.getY());
+			}
 		}
 	}
 	
@@ -92,8 +93,8 @@ public class GraphyTimeFrame extends JFrame{
 	}
 	
 	private void initFunctionField(){
-		functionField = new JTextField("...");
-		functionField.setEditable(false);
+		functionField = new JTextField();
+		functionField.setEditable(true);
 		functionField.setBackground(Color.WHITE);
 		inputPanel.add(functionField);
 		inputPanel.add(Sys.space());
@@ -103,13 +104,18 @@ public class GraphyTimeFrame extends JFrame{
 		graphButton = new JButton("Graph");
 		graphButton.addActionListener((e) -> {
 			String inputFunction = functionField.getText();
-			Point[] function = FunctionParser.parse(inputFunction);
-			if(function != null)
-				this.function = function;
+			Function function = FunctionParser.parse(inputFunction);
+			this.function = function.evaluate(-10, 10, 0.5);
+			repaint();
 		});
 		inputPanel.add(graphButton);
 		inputPanel.add(Sys.space());
 	}
+	
+	public Point planeToFrame(Point planePoint){
+		return new Point(planePoint.getX() * 20 + 200, 200 - planePoint.getY() * 20);
+	}
+	
 	public static void main(String[] args){
 		new GraphyTimeFrame();
 	}
