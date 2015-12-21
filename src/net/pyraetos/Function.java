@@ -45,6 +45,57 @@ public abstract class Function{
 		}
 
 	}
+	
+	static class Trig extends Function{
+		
+		static final int SIN = 0;
+		static final int COS = SIN + 1;
+		static final int TAN = COS + 1;
+		static final int ASIN = TAN + 1;
+		static final int ACOS = ASIN + 1;
+		static final int ATAN = ACOS + 1;
+		static final int LN = ATAN + 1;
+		static final int SQRT = LN + 1;
+		
+		private int op;
+		
+		public Trig(int op, Function inner){
+			this.inner = inner;
+			this.op = op;
+		}
+		
+		@Override
+		public double evaluate(double x){
+			switch(op){
+			case SIN: return Math.sin(inner.evaluate(x));
+			case COS: return Math.cos(inner.evaluate(x));
+			case TAN: return Math.tan(inner.evaluate(x));
+			case ASIN: return Math.asin(inner.evaluate(x));
+			case ACOS: return Math.acos(inner.evaluate(x));
+			case ATAN: return Math.atan(inner.evaluate(x));
+			case LN: return Math.log(inner.evaluate(x));
+			case SQRT: return Math.sqrt(inner.evaluate(x));
+			}
+			return 0;
+		}
+		
+	}
+	
+	static class Power extends Function{
+		
+		private Function right;
+
+		public Power(Function left, Function right){
+			this.inner = left;
+			this.right = right;
+		}
+
+		@Override
+		public double evaluate(double x){
+			return Math.pow(inner.evaluate(x), right.evaluate(x));
+		}
+		
+	}
 
 	static class Multiplication extends Function{
 

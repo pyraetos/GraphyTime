@@ -11,11 +11,17 @@ public abstract class Images{
 	
 	private static Map<String, Image> loadedImages = new HashMap<String, Image>();
 	private static String prefix;
+	private static Class<?> resource;
 	
 	static{
 		try{
 			fromLocal();
 		}catch(Exception e){}
+	}
+	
+	public static void fromResource(Class<?> clazz){
+		resource = clazz;
+		prefix = "class_resource/";
 	}
 	
 	public static void fromPyraetosNet(){
@@ -31,13 +37,14 @@ public abstract class Images{
 	}
 	
 	public static void fromURL(String url){
+		resource = null;
 		prefix = url + (url.endsWith("/") ? "" : "/");
 	}
 
 	public static Image retrieve(String file){
 		if(!loadedImages.containsKey(file)){
 			try{
-				URL url = new URL(prefix + file);
+				URL url = resource == null ? new URL(prefix + file) : resource.getResource(file);
 				Image image = ImageIO.read(url);
 				loadedImages.put(file, image);
 			}catch(Exception e){
