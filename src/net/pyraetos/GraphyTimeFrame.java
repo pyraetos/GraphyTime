@@ -13,9 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.pyraetos.math.Function;
+import net.pyraetos.math.FunctionParser;
+import net.pyraetos.math.ParseException;
+import net.pyraetos.math.Point;
 import net.pyraetos.util.Images;
 import net.pyraetos.util.Sys;
 
+@SuppressWarnings("serial")
 public class GraphyTimeFrame extends JFrame{
 
 	private JPanel inputPanel;
